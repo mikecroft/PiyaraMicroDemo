@@ -17,7 +17,9 @@
  */
 package fish.payara.examples.payaramicro.stockticker;
 
+import javax.json.bind.JsonbBuilder;
 import java.io.Serializable;
+
 
 /**
  *
@@ -66,7 +68,7 @@ public class Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "Stock{" + "symbol=" + symbol + ", description=" + description + ", price=" + price + '}';
+        return JsonbBuilder.create().toJson(this);
     }
     
     

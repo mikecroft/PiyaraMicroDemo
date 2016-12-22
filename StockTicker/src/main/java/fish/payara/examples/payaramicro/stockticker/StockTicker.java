@@ -6,10 +6,11 @@ package fish.payara.examples.payaramicro.stockticker;
 
 import fish.payara.micro.cdi.ClusteredCDIEventBus;
 import fish.payara.micro.cdi.Outbound;
+
 import javax.annotation.PostConstruct;
-import javax.ejb.Startup;
-import javax.ejb.Singleton;
 import javax.ejb.Schedule;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
