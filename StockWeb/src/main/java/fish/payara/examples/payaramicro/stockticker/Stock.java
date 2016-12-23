@@ -70,5 +70,4 @@ public class Stock implements Serializable {
         return JsonbBuilder.create().toJson(this);
     }
     
-    
 }
