@@ -32,10 +32,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>fish.payara.extras</groupId>
-            <artifactId>payara-micro</artifactId>
-            <version>4.1.1.161.1</version>
-            <type>jar</type>
+            <groupId>fish.payara.api</groupId>
+            <artifactId>payara-api</artifactId>
+            <version>4.1.1.171.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
