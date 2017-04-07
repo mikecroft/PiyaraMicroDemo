@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -33,16 +32,12 @@ import org.glassfish.jersey.media.sse.SseFeature;
  * @author mike
  */
 @Path("sse")
-@RequestScoped
+@ApplicationScoped
 public class StockEventsResource {
-
-    @Context
-    private UriInfo context;
 
     @Inject
     private ClusteredCDIEventBus bus;
 
-    @Inbound
     Stock stock;
 
     private EventOutput eo;
@@ -82,9 +77,12 @@ public class StockEventsResource {
             eo.write(new OutboundEvent.Builder().name("stock-update")
                     .data(String.class, stock.toString()).build());
         } catch (IOException ex) {
-            Logger.getLogger(StockEventsResource.class.getName()).log(Level.SEVERE, null, ex);
+            if (ex.getMessage().equals("This chunked output has been closed")) {
+                Logger.getLogger(StockEventsResource.class.getName()).log(Level.FINE, null, ex);
+            } else {
+                Logger.getLogger(StockEventsResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
     }
 
     /**
