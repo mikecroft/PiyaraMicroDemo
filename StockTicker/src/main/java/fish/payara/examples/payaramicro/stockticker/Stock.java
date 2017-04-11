@@ -19,6 +19,8 @@ package fish.payara.examples.payaramicro.stockticker;
 
 import javax.json.bind.JsonbBuilder;
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 
 
 /**
@@ -29,7 +31,11 @@ public class Stock implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String symbol;
+    
+    @JsonbTransient
     private String description;
+    
+    @JsonbProperty("TickerPrice")
     private double price;
 
     public Stock(String symbol, String description, double price) {
