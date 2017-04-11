@@ -29,15 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper.class);
-        resources.add(com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper.class);
-        resources.add(com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider.class);
-        resources.add(com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider.class);
-        resources.add(com.fasterxml.jackson.jaxrs.json.JsonMappingExceptionMapper.class);
-        resources.add(com.fasterxml.jackson.jaxrs.json.JsonParseExceptionMapper.class);
         resources.add(fish.payara.examples.payaramicro.stockweb.StockEventsResource.class);
-        resources.add(org.glassfish.json.jaxrs.JsonStructureBodyReader.class);
-        resources.add(org.glassfish.json.jaxrs.JsonStructureBodyWriter.class);
     }
     
 }
