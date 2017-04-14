@@ -34,7 +34,6 @@ public class Stock implements Serializable {
     
     private String description;
     
-    @JsonbProperty("TickerPrice")
     private double price;
 
     public Stock(String symbol, String description, double price) {

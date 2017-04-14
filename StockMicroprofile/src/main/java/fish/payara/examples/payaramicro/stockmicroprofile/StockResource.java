@@ -13,6 +13,7 @@ import javax.enterprise.context.Destroyed;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,7 +21,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.EventListener;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
@@ -35,6 +35,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
 public class StockResource {
 
     private Stock stock = new Stock("PYA", "Payara Stock", 20.0);
+    private String sseMessage;
 
     @Inject
     private ClusteredCDIEventBus bus;
@@ -54,6 +55,12 @@ public class StockResource {
 
     public void observer(@Observes @Inbound Stock stock) {
         this.stock = stock;
+        
+        // Prove SSE + JSONB deserialisation is working by printing out the stock object
+        // recieved from both sources:
+        Stock newStock = JsonbBuilder.create().fromJson(sseMessage, Stock.class);
+        System.out.println("CDI-stock: " + stock.toString());
+        System.out.println("sse-stock: " + newStock.toString());
     }
     
     public EventSource openEventSource() {
@@ -68,8 +75,7 @@ public class StockResource {
         EventListener listener = new EventListener() {
             @Override
             public void onEvent(InboundEvent inboundEvent) {
-                System.out.println(inboundEvent.getName() + "; "
-                        + inboundEvent.readData(String.class));
+                sseMessage = inboundEvent.readData(String.class);
             }
         };   
         eventSource.register(listener, "stock-update");

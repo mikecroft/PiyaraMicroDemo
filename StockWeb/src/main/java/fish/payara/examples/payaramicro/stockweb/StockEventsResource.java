@@ -40,8 +40,6 @@ public class StockEventsResource {
 
     Stock stock;
 
-    private EventOutput eo;
-
     /**
      * Creates a new instance of StockEventsResource
      */
@@ -51,7 +49,6 @@ public class StockEventsResource {
 
     @PostConstruct
     public void postConstruct() {
-        eo = new EventOutput();
         bus.initialize();
     }
 
@@ -65,24 +62,35 @@ public class StockEventsResource {
     @Produces(SseFeature.SERVER_SENT_EVENTS)
     public EventOutput getJsonSSE() {
 
-        System.out.println(stock.toString());
-
-        return this.eo;
+        final EventOutput eventOutput = new EventOutput();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    eventOutput.write(new OutboundEvent.Builder().name("stock-update")
+                            .data(String.class, stock.toString()).build());
+                } catch (IOException ex) {
+                    if (ex.getMessage().equals("This chunked output has been closed")) {
+                        Logger.getLogger(StockEventsResource.class.getName()).log(Level.FINE, null, ex);
+                    } else {
+                        Logger.getLogger(StockEventsResource.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } finally {
+                    try {
+                        eventOutput.close();
+                    } catch (IOException ioClose) {
+                        throw new RuntimeException(
+                                "Error when closing the event output.", ioClose);
+                    }
+                }
+            }
+        }).start();
+        return eventOutput;
     }
 
     public void observer(@Observes @Inbound Stock stock) {
         System.out.println("Received " + stock.toString());
         this.stock = stock;
-        try {
-            eo.write(new OutboundEvent.Builder().name("stock-update")
-                    .data(String.class, stock.toString()).build());
-        } catch (IOException ex) {
-            if (ex.getMessage().equals("This chunked output has been closed")) {
-                Logger.getLogger(StockEventsResource.class.getName()).log(Level.FINE, null, ex);
-            } else {
-                Logger.getLogger(StockEventsResource.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
     /**
