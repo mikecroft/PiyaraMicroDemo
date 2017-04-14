@@ -34,12 +34,12 @@ import org.glassfish.jersey.media.sse.SseFeature;
 @ApplicationScoped
 public class StockResource {
 
-    private Stock stock = new Stock("PYA", "Payara Stock", 20.0);
-    private String sseMessage;
+    private Stock cdiStock = new Stock("PYA", "Payara Stock", 20.0);
+    private Stock sseStock = new Stock("PYA", "Payara Stock", 20.0);
 
     @Inject
     private ClusteredCDIEventBus bus;
-    
+
     private EventSource eventSource;
 
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
@@ -50,19 +50,18 @@ public class StockResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getStock() {
-        return stock.toString();
+        return cdiStock.toString();
     }
 
     public void observer(@Observes @Inbound Stock stock) {
-        this.stock = stock;
-        
+        this.cdiStock = stock;
+
         // Prove SSE + JSONB deserialisation is working by printing out the stock object
         // recieved from both sources:
-        Stock newStock = JsonbBuilder.create().fromJson(sseMessage, Stock.class);
-        System.out.println("CDI-stock: " + stock.toString());
-        System.out.println("sse-stock: " + newStock.toString());
+        System.out.println("CDI-stock: " + cdiStock.toString());
+        System.out.println("sse-stock: " + sseStock.toString());
     }
-    
+
     public EventSource openEventSource() {
 
         //see https://jersey.java.net/documentation/latest/sse.html#d0e11986
@@ -70,20 +69,18 @@ public class StockResource {
         // explicitly listen on 9999 to avoid autobindhttp nonsense
         WebTarget target = client.target("http://localhost:9999/StockWeb-1.0-SNAPSHOT/rest/sse");
 
-
         EventSource eventSource = EventSource.target(target).build();
         EventListener listener = new EventListener() {
             @Override
             public void onEvent(InboundEvent inboundEvent) {
-                sseMessage = inboundEvent.readData(String.class);
+                sseStock = JsonbBuilder.create().fromJson(inboundEvent.readData(String.class), Stock.class);
             }
-        };   
+        };
         eventSource.register(listener, "stock-update");
         eventSource.open();
         return eventSource;
     }
 
-    
     public void destroy(@Observes @Destroyed(ApplicationScoped.class) Object init) {
         this.eventSource.close();
     }
