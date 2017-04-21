@@ -1,19 +1,19 @@
 /*
-
- DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-
- Copyright (c) 2015 C2B2 Consulting Limited. All rights reserved.
-
- The contents of this file are subject to the terms of the Common Development
- and Distribution License("CDDL") (collectively, the "License").  You
- may not use this file except in compliance with the License.  You can
- obtain a copy of the License at
- https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
- or packager/legal/LICENSE.txt.  See the License for the specific
- language governing permissions and limitations under the License.
-
- When distributing the software, include this License Header Notice in each
- file and include the License file at packager/legal/LICENSE.txt.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) [2016-2017] Payara Foundation and/or its affiliates. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common Development
+ * and Distribution License("CDDL") (collectively, the "License").  You
+ * may not use this file except in compliance with the License.  You can
+ * obtain a copy of the License at
+ * https://github.com/payara/Payara/blob/master/LICENSE.txt
+ * See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing the software, include this License Header Notice in each
+ * file and include the License file at glassfish/legal/LICENSE.txt.
  */
 package fish.payara.examples.payaramicro.stockticker;
 
@@ -25,15 +25,17 @@ import javax.json.bind.annotation.JsonbTransient;
 
 /**
  *
- * @author steve
+ * @author Stephen Millidge
  */
 public class Stock implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String symbol;
     
+    @JsonbTransient
     private String description;
     
+    @JsonbProperty("TickerPrice")
     private double price;
 
     public Stock(String symbol, String description, double price) {
