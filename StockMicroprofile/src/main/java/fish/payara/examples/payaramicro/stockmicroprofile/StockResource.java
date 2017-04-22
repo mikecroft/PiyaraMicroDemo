@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) [2016-2017] Payara Foundation and/or its affiliates. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common Development
+ * and Distribution License("CDDL") (collectively, the "License").  You
+ * may not use this file except in compliance with the License.  You can
+ * obtain a copy of the License at
+ * https://github.com/payara/Payara/blob/master/LICENSE.txt
+ * See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing the software, include this License Header Notice in each
+ * file and include the License file at glassfish/legal/LICENSE.txt.
  */
 package fish.payara.examples.payaramicro.stockmicroprofile;
 
@@ -28,7 +40,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
 
 /**
  *
- * @author mike
+ * @author Mike Croft
  */
 @Path("rest")
 @ApplicationScoped
@@ -42,8 +54,9 @@ public class StockResource {
 
     private EventSource eventSource;
 
-    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        this.eventSource = openEventSource();
+    // CDI is lazily initialised, so we need to give it a poke.
+    private void init(@Observes @Initialized(ApplicationScoped.class) Object initialised) {
+        openEventSource();
         bus.initialize();
     }
 
@@ -53,35 +66,38 @@ public class StockResource {
         return cdiStock.toString();
     }
 
-    public void observer(@Observes @Inbound Stock stock) {
-        this.cdiStock = stock;
+    private void observer(@Observes @Inbound Stock stock) {
+        cdiStock = stock;
 
-        // Prove SSE + JSONB deserialisation is working by printing out the stock object
-        // recieved from both sources:
-        System.out.println("CDI-stock: " + cdiStock.toString());
-        System.out.println("sse-stock: " + sseStock.toString());
+        // Prove SSE + JSONB deserialisation is working by printing out the stock object recieved from both sources:
+        System.out.println("CDI-Stock: " + cdiStock.toString());
+        System.out.println("SSE-Stock: " + sseStock.toString());
     }
 
-    public EventSource openEventSource() {
-
-        //see https://jersey.java.net/documentation/latest/sse.html#d0e11986
+    private void openEventSource() {
+        // See https://jersey.java.net/documentation/latest/sse.html#d0e11986
         Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-        // explicitly listen on 9999 to avoid autobindhttp nonsense
-        WebTarget target = client.target("http://localhost:9999/StockWeb-1.0-SNAPSHOT/rest/sse");
+        
+        // Explicitly listen on 9999 to avoid autoBindHttp nonsense
+        WebTarget target = client.target("http://localhost:9999/StockTicker-1.0-SNAPSHOT/rest/sse");
 
-        EventSource eventSource = EventSource.target(target).build();
+        eventSource = EventSource.target(target).build();
         EventListener listener = new EventListener() {
-            @Override
-            public void onEvent(InboundEvent inboundEvent) {
-                sseStock = JsonbBuilder.create().fromJson(inboundEvent.readData(String.class), Stock.class);
-            }
+                @Override
+                public void onEvent(InboundEvent inboundEvent) {
+                    sseStock = JsonbBuilder.create().fromJson(inboundEvent.readData(String.class), Stock.class);
+                }
         };
+        
         eventSource.register(listener, "stock-update");
         eventSource.open();
-        return eventSource;
     }
 
-    public void destroy(@Observes @Destroyed(ApplicationScoped.class) Object init) {
-        this.eventSource.close();
+    /**
+     * Close the Event Source
+     * @param destroyed 
+     */
+    private void destroy(@Observes @Destroyed(ApplicationScoped.class) Object destroyed) {
+        eventSource.close();
     }
 }

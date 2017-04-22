@@ -15,8 +15,7 @@
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/legal/LICENSE.txt.
  */
-package fish.payara.examples.payaramicro.stockmicroprofile;
-
+package fish.payara.examples.payaramicro.stockticker;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -25,7 +24,7 @@ import javax.ws.rs.core.Application;
  *
  * @author Mike Croft
  */
-@javax.ws.rs.ApplicationPath("/")
+@javax.ws.rs.ApplicationPath("/rest")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -42,7 +41,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(fish.payara.examples.payaramicro.stockmicroprofile.StockResource.class);
+        resources.add(fish.payara.examples.payaramicro.stockticker.StockEventsResource.class);
     }
     
 }
