@@ -35,13 +35,13 @@ public class Stock implements Serializable {
     @JsonbProperty("TickerPrice")
     private double price;
 
+    public Stock() {
+        
+    }
+    
     public Stock(String description, double price) {
         this.description = description;
         this.price = price;
-    }
-    
-    public Stock() {
-        
     }
 
     public String getDescription() {
@@ -64,6 +64,4 @@ public class Stock implements Serializable {
     public String toString() {
         return JsonbBuilder.create().toJson(this);
     }
-    
-    
 }
