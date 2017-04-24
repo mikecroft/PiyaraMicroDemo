@@ -17,15 +17,11 @@
  */
 package fish.payara.examples.payaramicro.stockticker;
 
-import fish.payara.micro.cdi.Inbound;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
