@@ -46,8 +46,8 @@ import org.glassfish.jersey.media.sse.SseFeature;
 @ApplicationScoped
 public class StockResource {
 
-    private Stock cdiStock = new Stock("PYA", "Payara Stock", 20.0);
-    private Stock sseStock = new Stock("PYA", "Payara Stock", 20.0);
+    private Stock cdiStock = new Stock("Payara Stock", 20.0);
+    private Stock sseStock = new Stock("Payara Stock", 20.0);
 
     @Inject
     private ClusteredCDIEventBus bus;

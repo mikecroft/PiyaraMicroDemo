@@ -52,8 +52,7 @@ public class StockTicker {
     @Schedule(hour = "*", minute="*", second = "*/1", persistent = false)
     private void generatePrice() {
         
-        String symbol = "PAYARA";
-        stock = new Stock(symbol,"",Math.random()*100.0);
+        stock = new Stock("",Math.random()*100.0);
         System.out.println(stock);
         stockEvents.fire(stock);
         
