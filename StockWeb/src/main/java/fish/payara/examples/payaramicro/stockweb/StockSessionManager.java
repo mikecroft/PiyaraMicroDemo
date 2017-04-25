@@ -56,11 +56,11 @@ public class StockSessionManager {
         sessions.remove(session);
     }
 
-    public void observer(@Observes @Inbound Stock stock) {
+    public void observer(@Observes @Inbound String stock) {
         try {
             for (Session session : sessions) {
-                System.out.println("Received " + stock.toString() + " writing to " + session.getId());
-                session.getBasicRemote().sendText(stock.toString());
+                System.out.println("Received " + stock+ " writing to " + session.getId());
+                session.getBasicRemote().sendText(stock);
             }
         } catch (IOException ex) {
             Logger.getLogger(StockPush.class.getName()).log(Level.SEVERE, null, ex);
