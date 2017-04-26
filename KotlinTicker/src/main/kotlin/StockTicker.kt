@@ -28,7 +28,6 @@ open class StockTicker {
     open fun generatePrice() {
 
         var symbol = "PAYARA"
-//        var stock = Stock(symbol,"New #badassfish stock",Math.random()*100.0)
         var stock = Stock(symbol = symbol, description = "New #badassfish stock", price = Math.random()*100.0)
         System.out.println(stock)
         stockEvents.fire(stock.toString())
