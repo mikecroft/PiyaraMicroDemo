@@ -40,10 +40,9 @@ public class StockEventsResource {
     private StockTicker stockTicker;
     
     /**
-     * Retrieves representation of an instance of
-     * fish.payara.examples.payaramicro.stockweb.StockEventsResource
+     * Retrieves a Server-Sent-Event representation of the current Stock object
      *
-     * @return an instance of java.lang.String
+     * @return A SSE as an instance of java.lang.String
      */
     @GET
     @Produces(SseFeature.SERVER_SENT_EVENTS)
@@ -55,7 +54,7 @@ public class StockEventsResource {
                 @Override
                 public void run() {
                     try {
-                        // Build and output a String representation of the Stock Object as a SSE.
+                        // Build and output a String representation of the Stock Object as an SSE.
                         eventOutput.write(new OutboundEvent.Builder().name("stock-update").data(String.class, 
                                 stockTicker.getStock().toString()).build());
                     } catch (Exception ex) {

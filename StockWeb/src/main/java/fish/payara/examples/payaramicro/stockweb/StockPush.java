@@ -36,7 +36,6 @@ public class StockPush {
     StockSessionManager sessionManager;
     
     private Session mySession;
-
     
     @OnOpen
     public void onOpen(Session session) {

@@ -50,12 +50,10 @@ public class StockTicker {
     }
 
     @Schedule(hour = "*", minute="*", second = "*/1", persistent = false)
-    private void generatePrice() {
-        
+    private void generatePrice() {        
         stock = new Stock("",Math.random()*100.0);
         System.out.println(stock);
-        stockEvents.fire(stock);
-        
+        stockEvents.fire(stock);       
     }
 
     public Stock getStock() {

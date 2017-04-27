@@ -66,6 +66,10 @@ public class StockResource {
         return cdiStock.toString();
     }
 
+    /**
+     * Listen for inbound CDI Events of type Stock, and print out our current stock values
+     * @param stock 
+     */
     private void observer(@Observes @Inbound Stock stock) {
         cdiStock = stock;
 
@@ -74,12 +78,15 @@ public class StockResource {
         System.out.println("SSE-Stock: " + sseStock.toString());
     }
 
+    /**
+     * Open a connection to the StockEventsResource class and listen for the SSEs
+     */
     private void openEventSource() {
         // See https://jersey.java.net/documentation/latest/sse.html#d0e11986
         Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
         
         // Explicitly listen on 9999 to avoid autoBindHttp nonsense
-        WebTarget target = client.target("http://localhost:9999/StockTicker-1.0-SNAPSHOT/rest/sse");
+        WebTarget target = client.target("http://localhost:9999/StockTicker-1.0-SNAPSHOT/webresources/sse");
 
         eventSource = EventSource.target(target).build();
         EventListener listener = new EventListener() {
