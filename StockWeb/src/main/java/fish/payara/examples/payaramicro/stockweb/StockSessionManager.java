@@ -44,8 +44,6 @@ public class StockSessionManager {
 
     @PostConstruct
     private void postConstruct() {
-        // Poke CDI to wake it up
-        bus.initialize();
         sessions = new HashSet<>();
     }
 

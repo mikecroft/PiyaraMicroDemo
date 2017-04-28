@@ -42,7 +42,7 @@ public class StockEventsResource {
     /**
      * Retrieves a Server-Sent-Event representation of the current Stock object
      *
-     * @return A SSE as an instance of java.lang.String
+     * @return An SSE as an instance of java.lang.String
      */
     @GET
     @Produces(SseFeature.SERVER_SENT_EVENTS)

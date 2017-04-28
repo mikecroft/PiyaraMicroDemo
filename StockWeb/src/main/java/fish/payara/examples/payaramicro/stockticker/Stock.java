@@ -26,10 +26,12 @@ import java.io.Serializable;
  */
 public class Stock implements Serializable {
 
+    private String symbol;
     private String description;  
     private double price;
 
-    public Stock(String description, double price) {
+    public Stock(String symbol, String description, double price) {
+        this.symbol = symbol;
         this.description = description;
         this.price = price;
     }
@@ -38,6 +40,14 @@ public class Stock implements Serializable {
         
     }
 
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+    
     public String getDescription() {
         return description;
     }
