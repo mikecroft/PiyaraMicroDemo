@@ -17,15 +17,11 @@
  */
 package fish.payara.examples.payaramicro.stockticker;
 
-import fish.payara.micro.cdi.Inbound;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
@@ -44,10 +40,9 @@ public class StockEventsResource {
     private StockTicker stockTicker;
     
     /**
-     * Retrieves representation of an instance of
-     * fish.payara.examples.payaramicro.stockweb.StockEventsResource
+     * Retrieves a Server-Sent-Event representation of the current Stock object
      *
-     * @return an instance of java.lang.String
+     * @return An SSE as an instance of java.lang.String
      */
     @GET
     @Produces(SseFeature.SERVER_SENT_EVENTS)
@@ -59,7 +54,7 @@ public class StockEventsResource {
                 @Override
                 public void run() {
                     try {
-                        // Build and output a String representation of the Stock Object as a SSE.
+                        // Build and output a String representation of the Stock Object as an SSE.
                         eventOutput.write(new OutboundEvent.Builder().name("stock-update").data(String.class, 
                                 stockTicker.getStock().toString()).build());
                     } catch (Exception ex) {

@@ -28,8 +28,7 @@ import javax.json.bind.annotation.JsonbTransient;
  * @author Stephen Millidge
  */
 public class Stock implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+    
     private String symbol;
     
     @JsonbTransient
@@ -38,14 +37,14 @@ public class Stock implements Serializable {
     @JsonbProperty("TickerPrice")
     private double price;
 
+    public Stock() {
+        
+    }
+    
     public Stock(String symbol, String description, double price) {
         this.symbol = symbol;
         this.description = description;
         this.price = price;
-    }
-    
-    public Stock() {
-        
     }
 
     public String getSymbol() {
@@ -55,7 +54,7 @@ public class Stock implements Serializable {
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
-
+    
     public String getDescription() {
         return description;
     }
@@ -76,6 +75,4 @@ public class Stock implements Serializable {
     public String toString() {
         return JsonbBuilder.create().toJson(this);
     }
-    
-    
 }

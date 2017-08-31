@@ -44,18 +44,29 @@ public class StockSessionManager {
 
     @PostConstruct
     private void postConstruct() {
-        bus.initialize();
         sessions = new HashSet<>();
     }
 
+    /**
+     * Register the session to our set of Sessions
+     * @param session The session to register
+     */
     void registerSession(Session session) {
         sessions.add(session);
     }
 
+    /**
+     * Deregisters the session from our set of Sessions
+     * @param session The session to deregister
+     */
     void deregisterSession(Session session) {
         sessions.remove(session);
     }
 
+    /**
+     * Listens for CDI Events of type Stock on the CDI Event Bus
+     * @param stock A Stock object from the CDI Event Bus
+     */
     private void observer(@Observes @Inbound Stock stock) {
         try {
             for (Session session : sessions) {
@@ -66,6 +77,4 @@ public class StockSessionManager {
             Logger.getLogger(StockPush.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
 }
