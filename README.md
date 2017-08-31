@@ -4,7 +4,7 @@ Maven 3
 Multicast enabled
 Payara Micro
 
-#Instructions
+# Instructions
 To compile, run: `mvn clean install` from the root directory.
 
 Once it has compiled, run it by:
